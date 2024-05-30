@@ -2,10 +2,11 @@ const puppeteer = require('puppeteer');
 const { MongoClient } = require('mongodb');
 const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
-
-const username = process.env.USERNAME;
+require('dotenv').config()
+const username = process.env.UNAME;
 const pwd = process.env.PWD;
 const mongouri = process.env.MONGO_URI;
+
 
 const sleep = ms => new Promise(res => setTimeout(res, ms));
 
@@ -23,7 +24,6 @@ async function scrapeTwitter() {
     // await page.setViewport({ width: 1920, height: 1080, deviceScaleFactor : 1});
 
     await page.goto('https://x.com/login', { waitUntil: 'networkidle2' });
-    
 
     console.log('Current URL:', page.url());
     try {

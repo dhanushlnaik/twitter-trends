@@ -3,28 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Twitter Trends Scraper</title>
+    <style>
+        #loading {
+            display: none;
+            font-size: 20px;
+        }
+    </style>
     <script>
         async function runScript() {
-            const response = await fetch('/fetch-trends');
-            const data = await response.json();
-
             const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `
-                <p>These are the most happening topics as on ${data.end_time}</p>
-                <ul>
-                    ${data.trends.map(trend => `<li>${trend}</li>`).join('')}
-                </ul>
-                <p>The IP address used for this query was ${data.ip_address}.</p>
-                <p>Here’s a JSON extract of this record from the MongoDB:</p>
-                <pre>${JSON.stringify(data, null, 2)}</pre>
-                <button onclick="runScript()">Click here to run the query again</button>
-            `;
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            resultDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('/fetch-trends');
+                const data = await response.json();
+
+                resultDiv.innerHTML = `
+                    <p>These are the most happening topics as on ${data.end_time}</p>
+                    <ul>
+                        ${data.trends.map(trend => `<li>${trend}</li>`).join('')}
+                    </ul>
+                    <p>The IP address used for this query was ${data.ip_address}.</p>
+                    <p>Here’s a JSON extract of this record from the MongoDB:</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        async function fetchFromMongoDB() {
+            const resultDiv = document.getElementById('result');
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            resultDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('/trends');
+                const data = await response.json();
+
+                resultDiv.innerHTML = `
+                    <p>Data fetched from MongoDB:</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+            }
         }
     </script>
 </head>
 <body>
     <h1>Twitter Trends Scraper</h1>
     <button onclick="runScript()">Click here to run the script</button>
+    <button onclick="fetchFromMongoDB()">Click here to fetch data from MongoDB</button>
+    <div id="loading">Loading...</div>
     <div id="result"></div>
 </body>
 </html>
