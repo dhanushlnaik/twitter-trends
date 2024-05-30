@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter Trends Scraper</title>
+    <script>
+        async function runScript() {
+            const response = await fetch('/fetch-trends');
+            const data = await response.json();
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <p>These are the most happening topics as on ${data.end_time}</p>
+                <ul>
+                    ${data.trends.map(trend => `<li>${trend}</li>`).join('')}
+                </ul>
+                <p>The IP address used for this query was ${data.ip_address}.</p>
+                <p>Here’s a JSON extract of this record from the MongoDB:</p>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+                <button onclick="runScript()">Click here to run the query again</button>
+            `;
+        }
+    </script>
+</head>
+<body>
+    <h1>Twitter Trends Scraper</h1>
+    <button onclick="runScript()">Click here to run the script</button>
+    <div id="result"></div>
+</body>
+</html>
