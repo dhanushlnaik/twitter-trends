@@ -4,7 +4,7 @@ const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config()
 const username = process.env.UNAME;
-const pwd = process.env.PWD;
+const pwd = process.env.T_PASS;
 const mongouri = process.env.MONGO_URI;
 
 
