@@ -54,8 +54,8 @@ async function scrapeTwitter() {
         const loginBut = await page.waitForSelector(`::-p-xpath(//button[@role='button']//span[text()='Log in'])`);
         console.log(loginBut)
         await loginBut.click(); 
-
-        await sleep(5000);
+        console.log('Current URL after login:', page.url());
+        await sleep(10000);
         console.log('Current URL after login:', page.url());
         await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
         await page.waitForSelector('section[aria-labelledby="accessible-list-0"]');
