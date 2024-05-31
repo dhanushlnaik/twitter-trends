@@ -20,17 +20,23 @@
                 const response = await fetch('/fetch-trends');
                 const data = await response.json();
 
-                resultDiv.innerHTML = `
-                    <p>These are the most happening topics as on ${data.end_time}</p>
-                    <ul>
-                        ${data.trends.map(trend => `<li>${trend}</li>`).join('')}
-                    </ul>
-                    <p>The IP address used for this query was ${data.ip_address}.</p>
-                    <p>Here’s a JSON extract of this record from the MongoDB:</p>
-                    <pre>${JSON.stringify(data, null, 2)}</pre>
-                `;
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <p>These are the most happening topics as on ${data.end_time}</p>
+                        <ul>
+                            ${data.trends.map(trend => `<li>${trend}</li>`).join('')}
+                        </ul>
+                        <p>The IP address used for this query was ${data.ip_address}.</p>
+                        <p>Here’s a JSON extract of this record from the MongoDB:</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
             } catch (error) {
-                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                console.error('Error running the script:', error);
+                resultDiv.innerHTML = `<p>Error running the script. Fetching last saved data from MongoDB...</p>`;
+                await fetchFromMongoDB();
             } finally {
                 loading.style.display = 'none';
             }
@@ -46,12 +52,16 @@
                 const response = await fetch('/trends');
                 const data = await response.json();
 
-                resultDiv.innerHTML = `
-                    <p>Data fetched from MongoDB:</p>
-                    <pre>${JSON.stringify(data, null, 2)}</pre>
-                `;
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <p>Data fetched :</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p>Error fetching data from MongoDB: ${data.error || 'Unknown error'}</p>`;
+                }
             } catch (error) {
-                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                resultDiv.innerHTML = `<p>Error fetching data from MongoDB: ${error.message}</p>`;
             } finally {
                 loading.style.display = 'none';
             }
