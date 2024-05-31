@@ -45,7 +45,7 @@ async function scrapeTwitter() {
         console.log(loginBut)
         await loginBut.click(); 
 
-        await sleep(3000);
+        await sleep(5000);
         console.log('Current URL after login:', page.url());
         await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
         await page.waitForSelector('section[aria-labelledby="accessible-list-0"]');
