@@ -19,7 +19,7 @@ async function scrapeTwitter() {
 
     // Puppeteer setup
     const browser = await puppeteer.launch({ 
-        headless: false, 
+        headless: true, 
         executablePath : 
             process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
         args : [
