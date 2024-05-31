@@ -19,7 +19,7 @@ async function scrapeTwitter() {
 
     // Puppeteer setup
     const browser = await puppeteer.launch({ 
-        headless: true, 
+        headless: false, 
         executablePath : 
             process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
         args : [
@@ -39,12 +39,12 @@ async function scrapeTwitter() {
     try {
  
         const usernameinput = await page.waitForSelector(`::-p-xpath(//input[@name="text"])`)
-        console.log(usernameinput);
+        
         await usernameinput.focus();
         await page.keyboard.type(username);
         console.log("Added")
         const nextBut = await page.waitForSelector(`::-p-xpath(//button[@role='button']//span[text()='Next'])`);
-        console.log(nextBut)
+        
         await nextBut.click();  
 
         const passwordinput = await page.waitForSelector(`::-p-xpath(//input[@name="password"])`)
@@ -52,10 +52,11 @@ async function scrapeTwitter() {
         await page.keyboard.type(pwd);
 
         const loginBut = await page.waitForSelector(`::-p-xpath(//button[@role='button']//span[text()='Log in'])`);
-        console.log(loginBut)
+        
         await loginBut.click(); 
+        
+        await sleep(6000);
         console.log('Current URL after login:', page.url());
-        // await sleep(2000);
         await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
         await page.waitForSelector('section[aria-labelledby="accessible-list-0"]');
 
