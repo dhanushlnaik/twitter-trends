@@ -18,7 +18,17 @@ async function scrapeTwitter() {
     const collection = db.collection('trends');
 
     // Puppeteer setup
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ 
+        headless: true, 
+        executablePath : 
+            process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+        args : [
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote",
+        ],
+     });
     const page = await browser.newPage();
     page.on('console', consoleObj => console.log(consoleObj.text()));
     // await page.setViewport({ width: 1920, height: 1080, deviceScaleFactor : 1});
